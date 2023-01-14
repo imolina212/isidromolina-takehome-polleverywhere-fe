@@ -1,0 +1,29 @@
+.participant-card {
+	display: flex;
+	align-items: center;
+	padding: 15px 15px;
+	border-bottom: 1px solid lightgray;
+
+	&__image img {
+		border-radius: 50%;
+	}
+	&__info {
+		display: flex;
+		align-items: flex-start;
+		flex-flow: column nowrap;
+		margin-left: 10px;
+
+		&__name {
+			font-weight: bold;
+		}
+	}
+	&__info > div {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		text-align: center;
+	}
+	.icon {
+		margin-right: 10px;
+	}
+}
