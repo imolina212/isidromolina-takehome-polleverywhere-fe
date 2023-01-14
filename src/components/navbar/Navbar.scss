@@ -11,6 +11,9 @@
 		&__brand {
 			font-size: 50px;
 			letter-spacing: 1px;
+			&:hover {
+				color: white;
+			}
 		}
 	}
 	&__right {
