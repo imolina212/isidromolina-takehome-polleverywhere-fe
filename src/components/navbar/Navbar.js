@@ -15,7 +15,7 @@ const Navbar = () => {
 				<Link to="/">
 					<div className="navbar__right__item">Home</div>
 				</Link>
-				<Link to="/raffle">
+				<Link to="/raffles">
 					<div className="navbar__right__item">Raffle</div>
 				</Link>
 				<Link to="/participants">

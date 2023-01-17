@@ -12,7 +12,9 @@ function App() {
 			<Navbar />
 			<Routes>
 				<Route exact path="/" element={<Home />} />
-				<Route path="/raffle" element={<Raffle />} />
+				<Route path="/raffles/:id" element={<Raffle />} />
+				<Route path="/raffles/:id/participants" element={<Raffle />} />
+				<Route path="/raffles/:id/winner" element={<Raffle />} />
 			</Routes>
 		</div>
 	);

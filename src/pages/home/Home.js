@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
+import axios from "axios";
+import { Link } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import RaffleCard from "../../components/raffleCard/RaffleCard";
 import "./Home.scss";
 
+const API = process.env.REACT_APP_API_URL;
 const Home = () => {
+	const [raffles, setRaffles] = useState([]);
+	useEffect(() => {
+		axios
+			.get(`${API}/raffles`)
+			.then((response) => {
+				console.log("HOME USE-EFFECT", response);
+				setRaffles(response.data);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, [API]);
+
+	console.log("raffles", raffles);
 	return (
 		<div className="home-page">
 			<div className="home-page__heading">Raffle App</div>
@@ -33,9 +50,13 @@ const Home = () => {
 				<div className="home-page__raffle-list__heading">
 					All Raffles:
 				</div>
-				<RaffleCard />
-				<RaffleCard />
-				<RaffleCard />
+				{raffles.map((raffle, index) => {
+					return (
+						<Link to={`/raffles/${raffle.id}`}>
+							<RaffleCard {...raffle} />
+						</Link>
+					);
+				})}
 			</div>
 		</div>
 	);

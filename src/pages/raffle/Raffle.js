@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { FaTicketAlt, FaTrophy } from "react-icons/fa";
@@ -10,10 +13,40 @@ import RaffleCard from "../../components/raffleCard/RaffleCard";
 import ParticipantCard from "../../components/participantCard/ParticipantCard";
 import { FaKey } from "react-icons/fa";
 import "./Raffle.scss";
+import WinnerCard from "../../components/winnerCard/WinnerCard";
+
+const API = process.env.REACT_APP_API_URL;
 
 const Raffle = () => {
 	const [key, setKey] = useState("all raffles");
+	const [participants, setParticipants] = useState([]);
+	const { id } = useParams();
+	const [raffles, setRaffles] = useState([]);
 
+	useEffect(() => {
+		if (id)
+			axios
+				.get(`${API}/raffles/${id}/participants`)
+				.then((response) => {
+					console.log("raffle res", response);
+					setParticipants(response.data);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+	}, [API, id]);
+
+	useEffect(() => {
+		axios
+			.get(`${API}/raffles`)
+			.then((response) => {
+				console.log("HOME USE-EFFECT", response);
+				setRaffles(response.data);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, [API]);
 	return (
 		<Tabs
 			id="controlled-tab-example"
@@ -25,24 +58,31 @@ const Raffle = () => {
 				eventKey="all raffles"
 				title={
 					<div>
-						<FaTicketAlt />
+						<FaTicketAlt size={40} />
 						<p>All Raffles</p>
 					</div>
 				}
 			>
-				<RaffleCard />
-				<RaffleCard />
-				<RaffleCard />
+				{raffles.map((raffle) => {
+					return (
+						<Link to={`/raffles/${raffle.id}`}>
+							<RaffleCard {...raffle} />
+						</Link>
+					);
+				})}
 			</Tab>
 			<Tab
 				eventKey="register"
 				title={
 					<div>
-						<BsPencilSquare />
+						<BsPencilSquare size={40} />
 						<p>Register</p>
 					</div>
 				}
 			>
+				<div className="tabs-container__tab__heading">
+					Register to participate in the raffle:
+				</div>
 				<form className="tabs-container__raffle-form">
 					<TextField
 						id="outlined-basic"
@@ -81,7 +121,7 @@ const Raffle = () => {
 				eventKey="participants"
 				title={
 					<div>
-						<MdGroups />
+						<MdGroups size={40} />
 						<p>Participants</p>
 					</div>
 				}
@@ -98,9 +138,9 @@ const Raffle = () => {
 						/>
 					</div>
 					<div>
-						<ParticipantCard />
-						<ParticipantCard />
-						<ParticipantCard />
+						{participants?.map((participant) => {
+							return <ParticipantCard {...participant} />;
+						})}
 					</div>
 				</div>
 			</Tab>
@@ -108,7 +148,7 @@ const Raffle = () => {
 				eventKey="winner"
 				title={
 					<div>
-						<FaTrophy />
+						<FaTrophy size={40} />
 						<p>Pick Winner</p>
 					</div>
 				}
@@ -143,6 +183,12 @@ const Raffle = () => {
 							The secret token used when creating the raffle must
 							be provided.
 						</div>
+					</div>
+					<div className="tabs-container__tab__winner__header">
+						Winner
+					</div>
+					<div className="tabs-container__tab__winner">
+						<WinnerCard />
 					</div>
 				</div>
 			</Tab>
